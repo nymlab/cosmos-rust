@@ -6,6 +6,13 @@
 
 use crate::{cosmos, ibc, traits::TypeUrl};
 
+impl TypeUrl
+    for ibc::applications::interchain_accounts::controller::v1::QueryInterchainAccountRequest
+{
+    const TYPE_URL: &'static str =
+        "/ibc.applications.interchain_accounts.controller.v1.QueryInterchainAccountRequest";
+}
+
 impl TypeUrl for ibc::core::client::v1::ClientUpdateProposal {
     const TYPE_URL: &'static str = "/ibc.core.client.v1.ClientUpdateProposal";
 }
