@@ -1,6 +1,6 @@
+// @generated
 /// ClientState from Tendermint tracks the current validator set, latest height,
 /// and a possible frozen height.
-#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ClientState {
     #[prost(string, tag = "1")]
@@ -25,7 +25,8 @@ pub struct ClientState {
     pub latest_height: ::core::option::Option<super::super::super::core::client::v1::Height>,
     /// Proof specifications used in verifying counterparty state
     #[prost(message, repeated, tag = "8")]
-    pub proof_specs: ::prost::alloc::vec::Vec<super::super::super::super::ics23::ProofSpec>,
+    pub proof_specs:
+        ::prost::alloc::vec::Vec<super::super::super::super::cosmos::ics23::v1::ProofSpec>,
     /// Path at which next upgraded client will be committed.
     /// Each element corresponds to the key for a single CommitmentProof in the
     /// chained proof. NOTE: ClientState must stored under
@@ -35,17 +36,16 @@ pub struct ClientState {
     /// "upgradedIBCState"}`
     #[prost(string, repeated, tag = "9")]
     pub upgrade_path: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// This flag, when set to true, will allow governance to recover a client
-    /// which has expired
+    /// allow_update_after_expiry is deprecated
+    #[deprecated]
     #[prost(bool, tag = "10")]
     pub allow_update_after_expiry: bool,
-    /// This flag, when set to true, will allow governance to unfreeze a client
-    /// whose chain has experienced a misbehaviour event
+    /// allow_update_after_misbehaviour is deprecated
+    #[deprecated]
     #[prost(bool, tag = "11")]
     pub allow_update_after_misbehaviour: bool,
 }
 /// ConsensusState defines the consensus state from Tendermint.
-#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct ConsensusState {
     /// timestamp that corresponds to the block height in which the ConsensusState
@@ -60,9 +60,10 @@ pub struct ConsensusState {
 }
 /// Misbehaviour is a wrapper over two conflicting Headers
 /// that implements Misbehaviour interface expected by ICS-02
-#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Misbehaviour {
+    /// ClientID is deprecated
+    #[deprecated]
     #[prost(string, tag = "1")]
     pub client_id: ::prost::alloc::string::String,
     #[prost(message, optional, tag = "2")]
@@ -82,21 +83,19 @@ pub struct Misbehaviour {
 /// current time in order to correctly verify, and the TrustedValidators must
 /// hash to TrustedConsensusState.NextValidatorsHash since that is the last
 /// trusted validator set at the TrustedHeight.
-#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Header {
     #[prost(message, optional, tag = "1")]
-    pub signed_header: ::core::option::Option<::tendermint_proto::types::SignedHeader>,
+    pub signed_header: ::core::option::Option<tendermint_proto::types::SignedHeader>,
     #[prost(message, optional, tag = "2")]
-    pub validator_set: ::core::option::Option<::tendermint_proto::types::ValidatorSet>,
+    pub validator_set: ::core::option::Option<tendermint_proto::types::ValidatorSet>,
     #[prost(message, optional, tag = "3")]
     pub trusted_height: ::core::option::Option<super::super::super::core::client::v1::Height>,
     #[prost(message, optional, tag = "4")]
-    pub trusted_validators: ::core::option::Option<::tendermint_proto::types::ValidatorSet>,
+    pub trusted_validators: ::core::option::Option<tendermint_proto::types::ValidatorSet>,
 }
 /// Fraction defines the protobuf message type for tmmath.Fraction that only
 /// supports positive values.
-#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Fraction {
     #[prost(uint64, tag = "1")]
@@ -104,3 +103,4 @@ pub struct Fraction {
     #[prost(uint64, tag = "2")]
     pub denominator: u64,
 }
+// @@protoc_insertion_point(module)

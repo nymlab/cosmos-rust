@@ -1,5 +1,5 @@
+// @generated
 /// GenesisState defines the ibc module's genesis state.
-#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GenesisState {
     /// ICS002 - Clients genesis state
@@ -12,3 +12,4 @@ pub struct GenesisState {
     #[prost(message, optional, tag = "3")]
     pub channel_genesis: ::core::option::Option<super::super::channel::v1::GenesisState>,
 }
+// @@protoc_insertion_point(module)

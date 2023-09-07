@@ -223,6 +223,12 @@ pub mod cosmos {
             include!("prost/cosmos-sdk/cosmos.vesting.v1beta1.rs");
         }
     }
+    /// ICS23 protobuf definitions.
+    pub mod ics23 {
+        pub mod v1 {
+            include!("prost/ibc-go/cosmos.ics23.v1.rs");
+        }
+    }
 }
 
 /// CosmWasm protobuf definitions.
@@ -316,14 +322,19 @@ pub mod ibc {
             pub mod v1 {
                 include!("prost/ibc-go/ibc.lightclients.localhost.v1.rs");
             }
+            pub mod v2 {
+                include!("prost/ibc-go/ibc.lightclients.localhost.v2.rs");
+            }
         }
         pub mod solomachine {
             pub mod v1 {
                 include!("prost/ibc-go/ibc.lightclients.solomachine.v1.rs");
             }
-
             pub mod v2 {
                 include!("prost/ibc-go/ibc.lightclients.solomachine.v2.rs");
+            }
+            pub mod v3 {
+                include!("prost/ibc-go/ibc.lightclients.solomachine.v3.rs");
             }
         }
         pub mod tendermint {
@@ -332,9 +343,4 @@ pub mod ibc {
             }
         }
     }
-}
-
-/// ICS23 protobuf definitions.
-pub mod ics23 {
-    include!("prost/ibc-go/ics23.rs");
 }

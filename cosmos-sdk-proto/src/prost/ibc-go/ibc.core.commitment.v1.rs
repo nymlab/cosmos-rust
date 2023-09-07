@@ -1,6 +1,6 @@
+// @generated
 /// MerkleRoot defines a merkle root hash.
 /// In the Cosmos SDK, the AppHash of a block header becomes the root.
-#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MerkleRoot {
     #[prost(bytes = "vec", tag = "1")]
@@ -9,7 +9,6 @@ pub struct MerkleRoot {
 /// MerklePrefix is merkle path prefixed to the key.
 /// The constructed key from the Path and the key will be append(Path.KeyPath,
 /// append(Path.KeyPrefix, key...))
-#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MerklePrefix {
     #[prost(bytes = "vec", tag = "1")]
@@ -18,7 +17,6 @@ pub struct MerklePrefix {
 /// MerklePath is the path used to verify commitment proofs, which can be an
 /// arbitrary structured object (defined by a commitment type).
 /// MerklePath is represented from root-to-leaf
-#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MerklePath {
     #[prost(string, repeated, tag = "1")]
@@ -29,9 +27,10 @@ pub struct MerklePath {
 /// elements, verifiable in conjunction with a known commitment root. Proofs
 /// should be succinct.
 /// MerkleProofs are ordered from leaf-to-root
-#[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MerkleProof {
     #[prost(message, repeated, tag = "1")]
-    pub proofs: ::prost::alloc::vec::Vec<super::super::super::super::ics23::CommitmentProof>,
+    pub proofs:
+        ::prost::alloc::vec::Vec<super::super::super::super::cosmos::ics23::v1::CommitmentProof>,
 }
+// @@protoc_insertion_point(module)

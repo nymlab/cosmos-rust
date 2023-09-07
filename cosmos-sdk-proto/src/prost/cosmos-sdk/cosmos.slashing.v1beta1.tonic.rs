@@ -124,7 +124,7 @@ pub mod query_client {
 pub mod query_server {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
-    ///Generated trait containing gRPC methods that should be implemented for use with QueryServer.
+    /// Generated trait containing gRPC methods that should be implemented for use with QueryServer.
     #[async_trait]
     pub trait Query: Send + Sync + 'static {
         async fn params(
@@ -404,6 +404,21 @@ pub mod msg_client {
             let path = http::uri::PathAndQuery::from_static("/cosmos.slashing.v1beta1.Msg/Unjail");
             self.inner.unary(request.into_request(), path, codec).await
         }
+        pub async fn update_params(
+            &mut self,
+            request: impl tonic::IntoRequest<super::MsgUpdateParams>,
+        ) -> Result<tonic::Response<super::MsgUpdateParamsResponse>, tonic::Status> {
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::new(
+                    tonic::Code::Unknown,
+                    format!("Service was not ready: {}", e.into()),
+                )
+            })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path =
+                http::uri::PathAndQuery::from_static("/cosmos.slashing.v1beta1.Msg/UpdateParams");
+            self.inner.unary(request.into_request(), path, codec).await
+        }
     }
 }
 /// Generated server implementations.
@@ -412,13 +427,17 @@ pub mod msg_client {
 pub mod msg_server {
     #![allow(unused_variables, dead_code, missing_docs, clippy::let_unit_value)]
     use tonic::codegen::*;
-    ///Generated trait containing gRPC methods that should be implemented for use with MsgServer.
+    /// Generated trait containing gRPC methods that should be implemented for use with MsgServer.
     #[async_trait]
     pub trait Msg: Send + Sync + 'static {
         async fn unjail(
             &self,
             request: tonic::Request<super::MsgUnjail>,
         ) -> Result<tonic::Response<super::MsgUnjailResponse>, tonic::Status>;
+        async fn update_params(
+            &self,
+            request: tonic::Request<super::MsgUpdateParams>,
+        ) -> Result<tonic::Response<super::MsgUpdateParamsResponse>, tonic::Status>;
     }
     #[derive(Debug)]
     pub struct MsgServer<T: Msg> {
@@ -494,6 +513,37 @@ pub mod msg_server {
                     let fut = async move {
                         let inner = inner.0;
                         let method = UnjailSvc(inner);
+                        let codec = tonic::codec::ProstCodec::default();
+                        let mut grpc = tonic::server::Grpc::new(codec).apply_compression_config(
+                            accept_compression_encodings,
+                            send_compression_encodings,
+                        );
+                        let res = grpc.unary(method, req).await;
+                        Ok(res)
+                    };
+                    Box::pin(fut)
+                }
+                "/cosmos.slashing.v1beta1.Msg/UpdateParams" => {
+                    #[allow(non_camel_case_types)]
+                    struct UpdateParamsSvc<T: Msg>(pub Arc<T>);
+                    impl<T: Msg> tonic::server::UnaryService<super::MsgUpdateParams> for UpdateParamsSvc<T> {
+                        type Response = super::MsgUpdateParamsResponse;
+                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
+                        fn call(
+                            &mut self,
+                            request: tonic::Request<super::MsgUpdateParams>,
+                        ) -> Self::Future {
+                            let inner = self.0.clone();
+                            let fut = async move { (*inner).update_params(request).await };
+                            Box::pin(fut)
+                        }
+                    }
+                    let accept_compression_encodings = self.accept_compression_encodings;
+                    let send_compression_encodings = self.send_compression_encodings;
+                    let inner = self.inner.clone();
+                    let fut = async move {
+                        let inner = inner.0;
+                        let method = UpdateParamsSvc(inner);
                         let codec = tonic::codec::ProstCodec::default();
                         let mut grpc = tonic::server::Grpc::new(codec).apply_compression_config(
                             accept_compression_encodings,

@@ -33,7 +33,7 @@ pub struct MemberRequest {
 }
 /// ThresholdDecisionPolicy is a decision policy where a proposal passes when it
 /// satisfies the two following conditions:
-/// 1. The sum of all `YES` voters' weights is greater or equal than the defined
+/// 1. The sum of all `YES` voter's weights is greater or equal than the defined
 ///     `threshold`.
 /// 2. The voting and execution periods of the proposal respect the parameters
 ///     given by `windows`.
@@ -55,7 +55,7 @@ pub struct ThresholdDecisionPolicy {
 ///     given by `windows`.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct PercentageDecisionPolicy {
-    /// percentage is the minimum percentage the weighted sum of `YES` votes must
+    /// percentage is the minimum percentage of the weighted sum of `YES` votes must
     /// meet for a proposal to succeed.
     #[prost(string, tag = "1")]
     pub percentage: ::prost::alloc::string::String,
@@ -135,7 +135,9 @@ pub struct GroupPolicyInfo {
     /// admin is the account address of the group admin.
     #[prost(string, tag = "3")]
     pub admin: ::prost::alloc::string::String,
-    /// metadata is any arbitrary metadata to attached to the group policy.
+    /// metadata is any arbitrary metadata attached to the group policy.
+    /// the recommended format of the metadata is to be found here:
+    /// <https://docs.cosmos.network/v0.47/modules/group#decision-policy-1>
     #[prost(string, tag = "4")]
     pub metadata: ::prost::alloc::string::String,
     /// version is used to track changes to a group's GroupPolicyInfo structure that
@@ -161,7 +163,9 @@ pub struct Proposal {
     /// group_policy_address is the account address of group policy.
     #[prost(string, tag = "2")]
     pub group_policy_address: ::prost::alloc::string::String,
-    /// metadata is any arbitrary metadata to attached to the proposal.
+    /// metadata is any arbitrary metadata attached to the proposal.
+    /// the recommended format of the metadata is to be found here:
+    /// <https://docs.cosmos.network/v0.47/modules/group#proposal-4>
     #[prost(string, tag = "3")]
     pub metadata: ::prost::alloc::string::String,
     /// proposers are the account addresses of the proposers.
@@ -190,7 +194,7 @@ pub struct Proposal {
     #[prost(message, optional, tag = "9")]
     pub final_tally_result: ::core::option::Option<TallyResult>,
     /// voting_period_end is the timestamp before which voting must be done.
-    /// Unless a successfull MsgExec is called before (to execute a proposal whose
+    /// Unless a successful MsgExec is called before (to execute a proposal whose
     /// tally is successful before the voting period ends), tallying will be done
     /// at this point, and the `final_tally_result`and `status` fields will be
     /// accordingly updated.
@@ -202,6 +206,16 @@ pub struct Proposal {
     /// messages is a list of `sdk.Msg`s that will be executed if the proposal passes.
     #[prost(message, repeated, tag = "12")]
     pub messages: ::prost::alloc::vec::Vec<::prost_types::Any>,
+    /// title is the title of the proposal
+    ///
+    /// Since: cosmos-sdk 0.47
+    #[prost(string, tag = "13")]
+    pub title: ::prost::alloc::string::String,
+    /// summary is a short summary of the proposal
+    ///
+    /// Since: cosmos-sdk 0.47
+    #[prost(string, tag = "14")]
+    pub summary: ::prost::alloc::string::String,
 }
 /// TallyResult represents the sum of weighted votes for each vote option.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -231,7 +245,7 @@ pub struct Vote {
     /// option is the voter's choice on the proposal.
     #[prost(enumeration = "VoteOption", tag = "3")]
     pub option: i32,
-    /// metadata is any arbitrary metadata to attached to the vote.
+    /// metadata is any arbitrary metadata attached to the vote.
     #[prost(string, tag = "4")]
     pub metadata: ::prost::alloc::string::String,
     /// submit_time is the timestamp when the vote was submitted.
@@ -405,6 +419,19 @@ pub struct EventLeaveGroup {
     #[prost(string, tag = "2")]
     pub address: ::prost::alloc::string::String,
 }
+/// EventProposalPruned is an event emitted when a proposal is pruned.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct EventProposalPruned {
+    /// proposal_id is the unique ID of the proposal.
+    #[prost(uint64, tag = "1")]
+    pub proposal_id: u64,
+    /// status is the proposal status (UNSPECIFIED, SUBMITTED, ACCEPTED, REJECTED, ABORTED, WITHDRAWN).
+    #[prost(enumeration = "ProposalStatus", tag = "2")]
+    pub status: i32,
+    /// tally_result is the proposal tally result (when applicable).
+    #[prost(message, optional, tag = "3")]
+    pub tally_result: ::core::option::Option<TallyResult>,
+}
 /// GenesisState defines the group module's genesis state.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GenesisState {
@@ -446,7 +473,7 @@ pub struct QueryGroupInfoRequest {
 /// QueryGroupInfoResponse is the Query/GroupInfo response type.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct QueryGroupInfoResponse {
-    /// info is the GroupInfo for the group.
+    /// info is the GroupInfo of the group.
     #[prost(message, optional, tag = "1")]
     pub info: ::core::option::Option<GroupInfo>,
 }
@@ -460,7 +487,7 @@ pub struct QueryGroupPolicyInfoRequest {
 /// QueryGroupPolicyInfoResponse is the Query/GroupPolicyInfo response type.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct QueryGroupPolicyInfoResponse {
-    /// info is the GroupPolicyInfo for the group policy.
+    /// info is the GroupPolicyInfo of the group policy.
     #[prost(message, optional, tag = "1")]
     pub info: ::core::option::Option<GroupPolicyInfo>,
 }
@@ -803,6 +830,9 @@ pub struct MsgUpdateGroupPolicyAdmin {
     #[prost(string, tag = "3")]
     pub new_admin: ::prost::alloc::string::String,
 }
+/// MsgUpdateGroupPolicyAdminResponse is the Msg/UpdateGroupPolicyAdmin response type.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MsgUpdateGroupPolicyAdminResponse {}
 /// MsgCreateGroupWithPolicy is the Msg/CreateGroupWithPolicy request type.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MsgCreateGroupWithPolicy {
@@ -836,9 +866,6 @@ pub struct MsgCreateGroupWithPolicyResponse {
     #[prost(string, tag = "2")]
     pub group_policy_address: ::prost::alloc::string::String,
 }
-/// MsgUpdateGroupPolicyAdminResponse is the Msg/UpdateGroupPolicyAdmin response type.
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MsgUpdateGroupPolicyAdminResponse {}
 /// MsgUpdateGroupPolicyDecisionPolicy is the Msg/UpdateGroupPolicyDecisionPolicy request type.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MsgUpdateGroupPolicyDecisionPolicy {
@@ -864,7 +891,7 @@ pub struct MsgUpdateGroupPolicyMetadata {
     /// group_policy_address is the account address of group policy.
     #[prost(string, tag = "2")]
     pub group_policy_address: ::prost::alloc::string::String,
-    /// metadata is the updated group policy metadata.
+    /// metadata is the group policy metadata to be updated.
     #[prost(string, tag = "3")]
     pub metadata: ::prost::alloc::string::String,
 }
@@ -881,7 +908,7 @@ pub struct MsgSubmitProposal {
     /// Proposers signatures will be counted as yes votes.
     #[prost(string, repeated, tag = "2")]
     pub proposers: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
-    /// metadata is any arbitrary metadata to attached to the proposal.
+    /// metadata is any arbitrary metadata attached to the proposal.
     #[prost(string, tag = "3")]
     pub metadata: ::prost::alloc::string::String,
     /// messages is a list of `sdk.Msg`s that will be executed if the proposal passes.
@@ -892,6 +919,16 @@ pub struct MsgSubmitProposal {
     /// If so, proposers signatures are considered as Yes votes.
     #[prost(enumeration = "Exec", tag = "5")]
     pub exec: i32,
+    /// title is the title of the proposal.
+    ///
+    /// Since: cosmos-sdk 0.47
+    #[prost(string, tag = "6")]
+    pub title: ::prost::alloc::string::String,
+    /// summary is the summary of the proposal.
+    ///
+    /// Since: cosmos-sdk 0.47
+    #[prost(string, tag = "7")]
+    pub summary: ::prost::alloc::string::String,
 }
 /// MsgSubmitProposalResponse is the Msg/SubmitProposal response type.
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -925,7 +962,7 @@ pub struct MsgVote {
     /// option is the voter's choice on the proposal.
     #[prost(enumeration = "VoteOption", tag = "3")]
     pub option: i32,
-    /// metadata is any arbitrary metadata to attached to the vote.
+    /// metadata is any arbitrary metadata attached to the vote.
     #[prost(string, tag = "4")]
     pub metadata: ::prost::alloc::string::String,
     /// exec defines whether the proposal should be executed
