@@ -13,6 +13,13 @@ impl TypeUrl
         "/ibc.applications.interchain_accounts.controller.v1.QueryInterchainAccountRequest";
 }
 
+impl TypeUrl
+    for ibc::applications::interchain_accounts::controller::v1::MsgRegisterInterchainAccount
+{
+    const TYPE_URL: &'static str =
+        "/ibc.applications.interchain_accounts.controller.v1.MsgRegisterInterchainAccount";
+}
+
 impl TypeUrl for ibc::core::client::v1::ClientUpdateProposal {
     const TYPE_URL: &'static str = "/ibc.core.client.v1.ClientUpdateProposal";
 }
