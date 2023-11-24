@@ -6,6 +6,7 @@
 
 use crate::{cosmos, ibc, traits::TypeUrl};
 
+// Vectis required query ICA
 impl TypeUrl
     for ibc::applications::interchain_accounts::controller::v1::QueryInterchainAccountRequest
 {

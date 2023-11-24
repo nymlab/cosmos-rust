@@ -1,6 +1,6 @@
 [package]
-name = "cosmos-sdk-proto"
-version = "0.19.0"
+name = "cosmos-sdk-proto-nymlab"
+version = "0.19.1"
 authors = [
     "Justin Kilpatrick <justin@althea.net>",
     "Greg Szabo <greg@informal.systems>",
@@ -13,7 +13,7 @@ readme = "README.md"
 categories = ["cryptography", "cryptography::cryptocurrencies", "database"]
 keywords = ["blockchain", "cosmos", "tendermint", "proto"]
 edition = "2021"
-rust-version = "1.63"
+rust-version = "1.67"
 
 [dependencies]
 prost = "0.11"

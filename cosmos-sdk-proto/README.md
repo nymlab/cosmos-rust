@@ -1,4 +1,16 @@
-# cosmos-sdk-proto
+# cosmos-sdk-proto-nymlab
+
+WARNING: This is a temporary crate published with [Cosmos SDK] v0.47 upgrade and adding Interchain Accounty Query for [Vectis].
+
+Once the upgrade is available, as it will be according to [issue 450](https://github.com/cosmos/cosmos-rust/issues/450) we will PR to use this upgrade.
+
+You can see the diff with the v0.19 of cosmos-sdk-proto [here](https://github.com/cosmos/cosmos-rust/compare/cosmos-sdk-proto/v0.19.0...nymlab:cosmos-rust:main).
+
+[Vectis]: https://vectis.space
+
+
+
+---
 
 [![Crate][crate-image]][crate-link]
 [![Docs][docs-image]][docs-link]
