@@ -71,6 +71,20 @@ pub mod query_client {
             self.inner = self.inner.accept_compressed(encoding);
             self
         }
+        pub async fn constitution(
+            &mut self,
+            request: impl tonic::IntoRequest<super::QueryConstitutionRequest>,
+        ) -> Result<tonic::Response<super::QueryConstitutionResponse>, tonic::Status> {
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::new(
+                    tonic::Code::Unknown,
+                    format!("Service was not ready: {}", e.into()),
+                )
+            })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/cosmos.gov.v1.Query/Constitution");
+            self.inner.unary(request.into_request(), path, codec).await
+        }
         pub async fn proposal(
             &mut self,
             request: impl tonic::IntoRequest<super::QueryProposalRequest>,
@@ -194,6 +208,10 @@ pub mod query_server {
     /// Generated trait containing gRPC methods that should be implemented for use with QueryServer.
     #[async_trait]
     pub trait Query: Send + Sync + 'static {
+        async fn constitution(
+            &self,
+            request: tonic::Request<super::QueryConstitutionRequest>,
+        ) -> Result<tonic::Response<super::QueryConstitutionResponse>, tonic::Status>;
         async fn proposal(
             &self,
             request: tonic::Request<super::QueryProposalRequest>,
@@ -280,6 +298,37 @@ pub mod query_server {
         fn call(&mut self, req: http::Request<B>) -> Self::Future {
             let inner = self.inner.clone();
             match req.uri().path() {
+                "/cosmos.gov.v1.Query/Constitution" => {
+                    #[allow(non_camel_case_types)]
+                    struct ConstitutionSvc<T: Query>(pub Arc<T>);
+                    impl<T: Query> tonic::server::UnaryService<super::QueryConstitutionRequest> for ConstitutionSvc<T> {
+                        type Response = super::QueryConstitutionResponse;
+                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
+                        fn call(
+                            &mut self,
+                            request: tonic::Request<super::QueryConstitutionRequest>,
+                        ) -> Self::Future {
+                            let inner = self.0.clone();
+                            let fut = async move { (*inner).constitution(request).await };
+                            Box::pin(fut)
+                        }
+                    }
+                    let accept_compression_encodings = self.accept_compression_encodings;
+                    let send_compression_encodings = self.send_compression_encodings;
+                    let inner = self.inner.clone();
+                    let fut = async move {
+                        let inner = inner.0;
+                        let method = ConstitutionSvc(inner);
+                        let codec = tonic::codec::ProstCodec::default();
+                        let mut grpc = tonic::server::Grpc::new(codec).apply_compression_config(
+                            accept_compression_encodings,
+                            send_compression_encodings,
+                        );
+                        let res = grpc.unary(method, req).await;
+                        Ok(res)
+                    };
+                    Box::pin(fut)
+                }
                 "/cosmos.gov.v1.Query/Proposal" => {
                     #[allow(non_camel_case_types)]
                     struct ProposalSvc<T: Query>(pub Arc<T>);
@@ -716,6 +765,20 @@ pub mod msg_client {
             let path = http::uri::PathAndQuery::from_static("/cosmos.gov.v1.Msg/UpdateParams");
             self.inner.unary(request.into_request(), path, codec).await
         }
+        pub async fn cancel_proposal(
+            &mut self,
+            request: impl tonic::IntoRequest<super::MsgCancelProposal>,
+        ) -> Result<tonic::Response<super::MsgCancelProposalResponse>, tonic::Status> {
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::new(
+                    tonic::Code::Unknown,
+                    format!("Service was not ready: {}", e.into()),
+                )
+            })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/cosmos.gov.v1.Msg/CancelProposal");
+            self.inner.unary(request.into_request(), path, codec).await
+        }
     }
 }
 /// Generated server implementations.
@@ -751,6 +814,10 @@ pub mod msg_server {
             &self,
             request: tonic::Request<super::MsgUpdateParams>,
         ) -> Result<tonic::Response<super::MsgUpdateParamsResponse>, tonic::Status>;
+        async fn cancel_proposal(
+            &self,
+            request: tonic::Request<super::MsgCancelProposal>,
+        ) -> Result<tonic::Response<super::MsgCancelProposalResponse>, tonic::Status>;
     }
     #[derive(Debug)]
     pub struct MsgServer<T: Msg> {
@@ -981,6 +1048,37 @@ pub mod msg_server {
                     let fut = async move {
                         let inner = inner.0;
                         let method = UpdateParamsSvc(inner);
+                        let codec = tonic::codec::ProstCodec::default();
+                        let mut grpc = tonic::server::Grpc::new(codec).apply_compression_config(
+                            accept_compression_encodings,
+                            send_compression_encodings,
+                        );
+                        let res = grpc.unary(method, req).await;
+                        Ok(res)
+                    };
+                    Box::pin(fut)
+                }
+                "/cosmos.gov.v1.Msg/CancelProposal" => {
+                    #[allow(non_camel_case_types)]
+                    struct CancelProposalSvc<T: Msg>(pub Arc<T>);
+                    impl<T: Msg> tonic::server::UnaryService<super::MsgCancelProposal> for CancelProposalSvc<T> {
+                        type Response = super::MsgCancelProposalResponse;
+                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
+                        fn call(
+                            &mut self,
+                            request: tonic::Request<super::MsgCancelProposal>,
+                        ) -> Self::Future {
+                            let inner = self.0.clone();
+                            let fut = async move { (*inner).cancel_proposal(request).await };
+                            Box::pin(fut)
+                        }
+                    }
+                    let accept_compression_encodings = self.accept_compression_encodings;
+                    let send_compression_encodings = self.send_compression_encodings;
+                    let inner = self.inner.clone();
+                    let fut = async move {
+                        let inner = inner.0;
+                        let method = CancelProposalSvc(inner);
                         let codec = tonic::codec::ProstCodec::default();
                         let mut grpc = tonic::server::Grpc::new(codec).apply_compression_config(
                             accept_compression_encodings,

@@ -114,7 +114,7 @@ pub struct QueryGranterGrantsResponse {
     #[prost(message, optional, tag = "2")]
     pub pagination: ::core::option::Option<super::super::base::query::v1beta1::PageResponse>,
 }
-/// QueryGranteeGrantsRequest is the request type for the Query/IssuedGrants RPC method.
+/// QueryGranteeGrantsRequest is the request type for the Query/GranteeGrants RPC method.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct QueryGranteeGrantsRequest {
     #[prost(string, tag = "1")]
@@ -144,12 +144,9 @@ pub struct MsgGrant {
     #[prost(message, optional, tag = "3")]
     pub grant: ::core::option::Option<Grant>,
 }
-/// MsgExecResponse defines the Msg/MsgExecResponse response type.
+/// MsgGrantResponse defines the Msg/MsgGrant response type.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MsgExecResponse {
-    #[prost(bytes = "vec", repeated, tag = "1")]
-    pub results: ::prost::alloc::vec::Vec<::prost::alloc::vec::Vec<u8>>,
-}
+pub struct MsgGrantResponse {}
 /// MsgExec attempts to execute the provided messages using
 /// authorizations granted to the grantee. Each message should have only
 /// one signer corresponding to the granter of the authorization.
@@ -163,9 +160,12 @@ pub struct MsgExec {
     #[prost(message, repeated, tag = "2")]
     pub msgs: ::prost::alloc::vec::Vec<::prost_types::Any>,
 }
-/// MsgGrantResponse defines the Msg/MsgGrant response type.
+/// MsgExecResponse defines the Msg/MsgExecResponse response type.
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct MsgGrantResponse {}
+pub struct MsgExecResponse {
+    #[prost(bytes = "vec", repeated, tag = "1")]
+    pub results: ::prost::alloc::vec::Vec<::prost::alloc::vec::Vec<u8>>,
+}
 /// MsgRevoke revokes any authorization with the provided sdk.Msg type on the
 /// granter's account with that has been granted to the grantee.
 #[derive(Clone, PartialEq, ::prost::Message)]

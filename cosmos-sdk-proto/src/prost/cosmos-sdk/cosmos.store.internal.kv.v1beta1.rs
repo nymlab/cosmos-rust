@@ -1,4 +1,6 @@
 // @generated
+// This is duplicated from the base kv directory to avoid a circular dependency with the cosmos-sdk
+
 /// Pairs defines a repeated slice of Pair objects.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct Pairs {

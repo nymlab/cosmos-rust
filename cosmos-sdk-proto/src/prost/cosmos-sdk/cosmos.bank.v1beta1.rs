@@ -177,10 +177,15 @@ pub struct QueryAllBalancesRequest {
     /// pagination defines an optional pagination for the request.
     #[prost(message, optional, tag = "2")]
     pub pagination: ::core::option::Option<super::super::base::query::v1beta1::PageRequest>,
+    /// resolve_denom is the flag to resolve the denom into a human-readable form from the metadata.
+    ///
+    /// Since: cosmos-sdk 0.50
+    #[prost(bool, tag = "3")]
+    pub resolve_denom: bool,
 }
 /// QueryAllBalancesResponse is the response type for the Query/AllBalances RPC
 /// method.
-#[derive(Clone, PartialEq, ::prost::Message)]
+#[derive(Clone, PartialEq, ::prost::Message, serde::Serialize)]
 pub struct QueryAllBalancesResponse {
     /// balances is the balances of all the coins.
     #[prost(message, repeated, tag = "1")]
@@ -281,6 +286,7 @@ pub struct QueryParamsRequest {}
 /// QueryParamsResponse defines the response type for querying x/bank parameters.
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct QueryParamsResponse {
+    /// params provides the parameters of the bank module.
     #[prost(message, optional, tag = "1")]
     pub params: ::core::option::Option<Params>,
 }
@@ -317,6 +323,22 @@ pub struct QueryDenomMetadataResponse {
     #[prost(message, optional, tag = "1")]
     pub metadata: ::core::option::Option<Metadata>,
 }
+/// QueryDenomMetadataByQueryStringRequest is the request type for the Query/DenomMetadata RPC method.
+/// Identical with QueryDenomMetadataRequest but receives denom as query string.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct QueryDenomMetadataByQueryStringRequest {
+    /// denom is the coin denom to query the metadata for.
+    #[prost(string, tag = "1")]
+    pub denom: ::prost::alloc::string::String,
+}
+/// QueryDenomMetadataByQueryStringResponse is the response type for the Query/DenomMetadata RPC
+/// method. Identical with QueryDenomMetadataResponse but receives denom as query string in request.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct QueryDenomMetadataByQueryStringResponse {
+    /// metadata describes and provides all the client information for the requested token.
+    #[prost(message, optional, tag = "1")]
+    pub metadata: ::core::option::Option<Metadata>,
+}
 /// QueryDenomOwnersRequest defines the request type for the DenomOwners RPC query,
 /// which queries for a paginated set of all account holders of a particular
 /// denomination.
@@ -348,6 +370,31 @@ pub struct DenomOwner {
 /// Since: cosmos-sdk 0.46
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct QueryDenomOwnersResponse {
+    #[prost(message, repeated, tag = "1")]
+    pub denom_owners: ::prost::alloc::vec::Vec<DenomOwner>,
+    /// pagination defines the pagination in the response.
+    #[prost(message, optional, tag = "2")]
+    pub pagination: ::core::option::Option<super::super::base::query::v1beta1::PageResponse>,
+}
+/// QueryDenomOwnersByQueryRequest defines the request type for the DenomOwnersByQuery RPC query,
+/// which queries for a paginated set of all account holders of a particular
+/// denomination.
+///
+/// Since: cosmos-sdk 0.50.3
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct QueryDenomOwnersByQueryRequest {
+    /// denom defines the coin denomination to query all account holders for.
+    #[prost(string, tag = "1")]
+    pub denom: ::prost::alloc::string::String,
+    /// pagination defines an optional pagination for the request.
+    #[prost(message, optional, tag = "2")]
+    pub pagination: ::core::option::Option<super::super::base::query::v1beta1::PageRequest>,
+}
+/// QueryDenomOwnersByQueryResponse defines the RPC response of a DenomOwnersByQuery RPC query.
+///
+/// Since: cosmos-sdk 0.50.3
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct QueryDenomOwnersByQueryResponse {
     #[prost(message, repeated, tag = "1")]
     pub denom_owners: ::prost::alloc::vec::Vec<DenomOwner>,
     /// pagination defines the pagination in the response.
@@ -434,6 +481,7 @@ pub struct MsgUpdateParamsResponse {}
 /// Since: cosmos-sdk 0.47
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MsgSetSendEnabled {
+    /// authority is the address that controls the module.
     #[prost(string, tag = "1")]
     pub authority: ::prost::alloc::string::String,
     /// send_enabled is the list of entries to add or update.

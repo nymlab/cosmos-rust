@@ -1,3 +1,5 @@
+use serde::Serialize;
+
 use crate::{
     crypto::PublicKey,
     proto,
@@ -11,7 +13,7 @@ use crate::{
 ///
 /// Any custom account type should extend this type for additional functionality
 /// (e.g. vesting).
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, Eq, PartialEq, Serialize)]
 pub struct BaseAccount {
     /// Bech32 [`AccountId`] of this account.
     pub address: AccountId,

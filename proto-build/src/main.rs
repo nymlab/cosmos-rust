@@ -19,14 +19,17 @@ use walkdir::WalkDir;
 // TODO(tarcieri): use a logger for this
 static QUIET: AtomicBool = AtomicBool::new(false);
 
+/// The Ptd commit or tag to be cloned and used to build the proto files
+const PTD_REV: &str = "7cd0039";
+
 /// The Cosmos SDK commit or tag to be cloned and used to build the proto files
-const COSMOS_SDK_REV: &str = "v0.47.4";
+const COSMOS_SDK_REV: &str = "b3914a70e160d8";
 
 /// The Cosmos ibc-go commit or tag to be cloned and used to build the proto files
-const IBC_REV: &str = "v7.2.0";
+const IBC_REV: &str = "v8.0.0";
 
 /// The wasmd commit or tag to be cloned and used to build the proto files
-const WASMD_REV: &str = "v0.41.0";
+const WASMD_REV: &str = "v0.50.0";
 
 // All paths must end with a / and either be absolute or include a ./ to reference the current
 // working directory.
@@ -39,6 +42,8 @@ const COSMOS_SDK_DIR: &str = "../cosmos-sdk-go";
 const IBC_DIR: &str = "../ibc-go";
 /// Directory where the submodule is located
 const WASMD_DIR: &str = "../wasmd";
+/// Directory generated ptd proto files go into in this repo
+const PTD_DIR: &str = "../ptd";
 /// A temporary directory for proto building
 const TMP_BUILD_DIR: &str = "/tmp/tmp-protobuf/";
 
@@ -73,22 +78,27 @@ fn main() {
         fs::remove_dir_all(tmp_build_dir.clone()).unwrap();
     }
 
+    let temp_ptd_dir = tmp_build_dir.join("ptd");
     let temp_sdk_dir = tmp_build_dir.join("cosmos-sdk");
     let temp_ibc_dir = tmp_build_dir.join("ibc-go");
     let temp_wasmd_dir = tmp_build_dir.join("wasmd");
 
+    fs::create_dir_all(&temp_ptd_dir).unwrap();
     fs::create_dir_all(&temp_sdk_dir).unwrap();
     fs::create_dir_all(&temp_wasmd_dir).unwrap();
     fs::create_dir_all(&temp_ibc_dir).unwrap();
 
     update_submodules();
+    output_ptd_version(&temp_ptd_dir);
     output_sdk_version(&temp_sdk_dir);
     output_wasmd_version(&temp_wasmd_dir);
     output_ibc_version(&temp_ibc_dir);
+    compile_ptd_protos_and_services(&temp_ptd_dir);
     compile_sdk_protos_and_services(&temp_sdk_dir);
     compile_ibc_protos_and_services(&temp_ibc_dir);
     compile_wasmd_protos_and_services(&temp_wasmd_dir);
 
+    copy_generated_files(&temp_ptd_dir, &proto_dir.join("ptd"));
     copy_generated_files(&temp_sdk_dir, &proto_dir.join("cosmos-sdk"));
     copy_generated_files(&temp_ibc_dir, &proto_dir.join("ibc-go"));
     copy_generated_files(&temp_wasmd_dir, &proto_dir.join("wasmd"));
@@ -100,8 +110,8 @@ fn main() {
 
     if is_github() {
         println!(
-            "Rebuild protos with proto-build (cosmos-sdk rev: {} ibc-go rev: {} wasmd rev: {}))",
-            COSMOS_SDK_REV, IBC_REV, WASMD_REV
+            "Rebuild protos with proto-build (cosmos-sdk rev: {} ibc-go rev: {} wasmd rev: {}, ptd rev: {}))",
+            COSMOS_SDK_REV, IBC_REV, WASMD_REV, PTD_REV
         );
     }
 }
@@ -199,6 +209,11 @@ fn update_submodules() {
     run_git(["submodule", "update", "--init"]);
     run_git(["-C", WASMD_DIR, "fetch"]);
     run_git(["-C", WASMD_DIR, "reset", "--hard", WASMD_REV]);
+
+    info!("Updating ptd submodule...");
+    run_git(["submodule", "update", "--init"]);
+    run_git(["-C", PTD_DIR, "fetch"]);
+    run_git(["-C", PTD_DIR, "reset", "--hard", PTD_REV]);
 }
 
 fn output_sdk_version(out_dir: &Path) {
@@ -214,6 +229,24 @@ fn output_ibc_version(out_dir: &Path) {
 fn output_wasmd_version(out_dir: &Path) {
     let path = out_dir.join("WASMD_COMMIT");
     fs::write(path, WASMD_REV).unwrap();
+}
+
+fn output_ptd_version(out_dir: &Path) {
+    let path = out_dir.join("PTD_COMMIT");
+    fs::write(path, PTD_REV).unwrap();
+}
+
+fn compile_ptd_protos_and_services(out_dir: &Path) {
+    info!(
+        "Compiling ptd .proto files to Rust into '{}'...",
+        out_dir.display()
+    );
+
+    // Compile all of the proto files, along with grpc service clients
+    info!("Compiling proto definitions and clients for GRPC services!");
+    let proto_path = Path::new(PTD_DIR).join("proto");
+    run_buf("buf.ptd.gen.yaml", &proto_path, out_dir);
+    info!("=> Done!");
 }
 
 fn compile_sdk_protos_and_services(out_dir: &Path) {

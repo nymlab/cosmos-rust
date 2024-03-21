@@ -531,5 +531,37 @@ pub mod msg_client {
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
+        pub async fn store_and_migrate_contract(
+            &mut self,
+            request: impl tonic::IntoRequest<super::MsgStoreAndMigrateContract>,
+        ) -> Result<tonic::Response<super::MsgStoreAndMigrateContractResponse>, tonic::Status>
+        {
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::new(
+                    tonic::Code::Unknown,
+                    format!("Service was not ready: {}", e.into()),
+                )
+            })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/cosmwasm.wasm.v1.Msg/StoreAndMigrateContract",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
+        pub async fn update_contract_label(
+            &mut self,
+            request: impl tonic::IntoRequest<super::MsgUpdateContractLabel>,
+        ) -> Result<tonic::Response<super::MsgUpdateContractLabelResponse>, tonic::Status> {
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::new(
+                    tonic::Code::Unknown,
+                    format!("Service was not ready: {}", e.into()),
+                )
+            })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path =
+                http::uri::PathAndQuery::from_static("/cosmwasm.wasm.v1.Msg/UpdateContractLabel");
+            self.inner.unary(request.into_request(), path, codec).await
+        }
     }
 }

@@ -113,7 +113,7 @@ impl TryFrom<&Any> for PublicKey {
                 proto::cosmos::crypto::secp256k1::PubKey::decode(&*any.value)?.try_into()
             }
             other => Err(Error::Crypto)
-                .wrap_err_with(|| format!("invalid type URL for public key: {}", other)),
+                .wrap_err_with(|| format!("invalid type URL for public key: {other}")),
         }
     }
 }
@@ -194,7 +194,7 @@ impl From<PublicKey> for PublicKeyJson {
 impl From<&PublicKey> for PublicKeyJson {
     fn from(public_key: &PublicKey) -> PublicKeyJson {
         let type_url = public_key.type_url().to_owned();
-        let key = String::from_utf8(base64::encode(&public_key.to_bytes())).expect("UTF-8 error");
+        let key = String::from_utf8(base64::encode(public_key.to_bytes())).expect("UTF-8 error");
         PublicKeyJson { type_url, key }
     }
 }
@@ -218,7 +218,7 @@ impl TryFrom<&PublicKeyJson> for PublicKey {
             Self::SECP256K1_TYPE_URL => tendermint::PublicKey::from_raw_secp256k1(&pk_bytes),
             other => {
                 return Err(Error::Crypto)
-                    .wrap_err_with(|| format!("invalid public key @type: {}", other))
+                    .wrap_err_with(|| format!("invalid public key @type: {other}"))
             }
         };
 

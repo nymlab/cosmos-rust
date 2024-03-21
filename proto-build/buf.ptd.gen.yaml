@@ -1,0 +1,10 @@
+version: v1
+plugins:
+  - plugin: buf.build/community/neoeinstein-prost:v0.2.1
+    out: .
+    opt:
+      - extern_path=.tendermint=::tendermint_proto
+  - plugin: buf.build/community/neoeinstein-tonic:v0.2.2
+    out: .
+    opt:
+      - extern_path=.tendermint=::tendermint_proto

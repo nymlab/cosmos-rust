@@ -4,7 +4,16 @@
 // TODO(tarcieri): leverage first-class support for type URLs in prost?
 // See: https://github.com/tokio-rs/prost/issues/299
 
-use crate::{cosmos, ibc, traits::TypeUrl};
+use crate::{cosmos, ibc, ptd, traits::TypeUrl};
+
+// Ptd
+impl TypeUrl for ptd::abstractaccount::v0::MsgRegisterAccount {
+    const TYPE_URL: &'static str = "/ptd.abstractaccount.v0.MsgRegisterAccount";
+}
+
+impl TypeUrl for ptd::sdjwt::v0::VerifiablePresentation {
+    const TYPE_URL: &'static str = "/ptd.sdjwt.v0.VerifiablePresentation";
+}
 
 // Vectis required query ICA
 impl TypeUrl

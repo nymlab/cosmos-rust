@@ -57,6 +57,7 @@ impl TryFrom<proto::cosmos::tx::v1beta1::AuthInfo> for AuthInfo {
 }
 
 impl From<AuthInfo> for proto::cosmos::tx::v1beta1::AuthInfo {
+    #[allow(deprecated)]
     fn from(auth_info: AuthInfo) -> proto::cosmos::tx::v1beta1::AuthInfo {
         proto::cosmos::tx::v1beta1::AuthInfo {
             signer_infos: auth_info.signer_infos.into_iter().map(Into::into).collect(),

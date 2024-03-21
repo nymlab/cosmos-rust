@@ -8,3 +8,6 @@
 	path = cosmos-sdk-go
 	url = https://github.com/nymlab/cosmos-sdk.git
 	branch = upgrade-50.5
+[submodule "ptd"]
+	path = ptd
+	url = git@github.com:nymlab/protocol.git

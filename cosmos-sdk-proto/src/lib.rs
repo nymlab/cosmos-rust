@@ -21,6 +21,20 @@ pub use tendermint_proto as tendermint;
 /// The version (commit hash) of the Cosmos SDK used when generating this library.
 pub const COSMOS_SDK_VERSION: &str = include_str!("prost/cosmos-sdk/COSMOS_SDK_COMMIT");
 
+/// PTD protobuf definitions
+pub mod ptd {
+    pub mod abstractaccount {
+        pub mod v0 {
+            include!("prost/ptd/ptd.abstractaccount.v0.rs");
+        }
+    }
+    pub mod sdjwt {
+        pub mod v0 {
+            include!("prost/ptd/ptd.sdjwt.v0.rs");
+        }
+    }
+}
+
 /// Cosmos protobuf definitions.
 pub mod cosmos {
     /// Authentication of accounts and transactions.
@@ -56,10 +70,10 @@ pub mod cosmos {
             }
         }
 
-        /// Key-value pairs.
-        pub mod kv {
+        /// node.
+        pub mod node {
             pub mod v1beta1 {
-                include!("prost/cosmos-sdk/cosmos.base.kv.v1beta1.rs");
+                include!("prost/cosmos-sdk/cosmos.base.node.v1beta1.rs");
             }
         }
 
@@ -83,15 +97,15 @@ pub mod cosmos {
 
         /// Snapshots containing Tendermint state sync info.
         pub mod snapshots {
-            pub mod v1beta1 {
-                include!("prost/cosmos-sdk/cosmos.base.snapshots.v1beta1.rs");
+            pub mod v1 {
+                include!("prost/cosmos-sdk/cosmos.store.snapshots.v1.rs");
             }
         }
 
         /// Data structure that holds the state of the application.
         pub mod store {
             pub mod v1beta1 {
-                include!("prost/cosmos-sdk/cosmos.base.store.v1beta1.rs");
+                include!("prost/cosmos-sdk/cosmos.store.v1beta1.rs");
             }
         }
 
@@ -319,17 +333,11 @@ pub mod ibc {
     /// IBC light clients.
     pub mod lightclients {
         pub mod localhost {
-            pub mod v1 {
-                include!("prost/ibc-go/ibc.lightclients.localhost.v1.rs");
-            }
             pub mod v2 {
                 include!("prost/ibc-go/ibc.lightclients.localhost.v2.rs");
             }
         }
         pub mod solomachine {
-            pub mod v1 {
-                include!("prost/ibc-go/ibc.lightclients.solomachine.v1.rs");
-            }
             pub mod v2 {
                 include!("prost/ibc-go/ibc.lightclients.solomachine.v2.rs");
             }

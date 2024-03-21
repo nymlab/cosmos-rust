@@ -1,12 +1,13 @@
 //! Error types
 
-pub use eyre::{Report, Result};
+pub use eyre::Result;
 
+use serde::Serialize;
 use tendermint::Hash;
 use thiserror::Error;
 
 /// Kinds of errors.
-#[derive(Clone, Debug, Eq, Error, PartialEq)]
+#[derive(Clone, Debug, Eq, Error, PartialEq, Serialize)]
 pub enum Error {
     /// Invalid account.
     #[error("invalid account ID: {id:?}")]

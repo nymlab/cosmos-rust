@@ -531,5 +531,24 @@ pub struct MsgCommunityPoolSpend {
 /// Since: cosmos-sdk 0.47
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct MsgCommunityPoolSpendResponse {}
+/// DepositValidatorRewardsPool defines the request structure to provide
+/// additional rewards to delegators from a specific validator.
+///
+/// Since: cosmos-sdk 0.50
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MsgDepositValidatorRewardsPool {
+    #[prost(string, tag = "1")]
+    pub depositor: ::prost::alloc::string::String,
+    #[prost(string, tag = "2")]
+    pub validator_address: ::prost::alloc::string::String,
+    #[prost(message, repeated, tag = "3")]
+    pub amount: ::prost::alloc::vec::Vec<super::super::base::v1beta1::Coin>,
+}
+/// MsgDepositValidatorRewardsPoolResponse defines the response to executing a
+/// MsgDepositValidatorRewardsPool message.
+///
+/// Since: cosmos-sdk 0.50
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct MsgDepositValidatorRewardsPoolResponse {}
 include!("cosmos.distribution.v1beta1.tonic.rs");
 // @@protoc_insertion_point(module)
