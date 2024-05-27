@@ -11,3 +11,4 @@
 [submodule "ptd"]
 	path = ptd
 	url = git@github.com:nymlab/protocol.git
+  update = none
